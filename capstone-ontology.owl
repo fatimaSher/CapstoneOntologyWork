@@ -1,0 +1,438 @@
+@prefix : <http://www.semanticweb.org/capstone-ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/capstone-ontology/> .
+
+<http://www.semanticweb.org/capstone-ontology> rdf:type owl:Ontology ;
+                                                owl:imports <http://purl.org/dc/terms/> ,
+                                                            <http://www.w3.org/2006/time#2016> ,
+                                                            <http://www.w3.org/ns/prov-o-inverses-20130430> ,
+                                                            <http://xmlns.com/foaf/0.1/> ;
+                                                <http://purl.org/dc/elements/1.1/description> "A comprehensive ontology for university capstone projects covering stakeholders, phases, deliverables, and evaluations." ;
+                                                <http://purl.org/dc/elements/1.1/title> "Capstone Project Ontology" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/capstone-ontology#conductsEvaluation
+:conductsEvaluation rdf:type owl:ObjectProperty ;
+                    rdfs:domain :ExternalEvaluator ;
+                    rdfs:range :Evaluation .
+
+
+###  http://www.semanticweb.org/capstone-ontology#evaluatedBy
+:evaluatedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain :Project ;
+             rdfs:range :Stakeholders ;
+             rdfs:comment "Identifies who assesses the project outcomes" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#evaluatesDeliverable
+:evaluatesDeliverable rdf:type owl:ObjectProperty ;
+                      rdfs:domain :Evaluation ;
+                      rdfs:range :Deliverables .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasAdvisor
+:hasAdvisor rdf:type owl:ObjectProperty ;
+            rdfs:domain :Project ;
+            rdfs:range [ owl:intersectionOf ( :Faculty
+                                              [ rdf:type owl:Restriction ;
+                                                owl:onProperty :holdsRole ;
+                                                owl:someValuesFrom :Advisor
+                                              ]
+                                            ) ;
+                         rdf:type owl:Class
+                       ] .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasDeliverable
+:hasDeliverable rdf:type owl:ObjectProperty ;
+                rdfs:domain :Project ;
+                rdfs:range :Deliverables ;
+                rdfs:comment "Links project to its required outputs" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasPhase
+:hasPhase rdf:type owl:ObjectProperty ;
+          rdfs:domain :Project ;
+          rdfs:range :Phases .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasSupervisor
+:hasSupervisor rdf:type owl:ObjectProperty ;
+               rdfs:domain :Project ;
+               rdfs:range [ owl:intersectionOf ( :Faculty
+                                                 [ rdf:type owl:Restriction ;
+                                                   owl:onProperty :holdsRole ;
+                                                   owl:someValuesFrom :Supervisor
+                                                 ]
+                                               ) ;
+                            rdf:type owl:Class
+                          ] .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasTeamMember
+:hasTeamMember rdf:type owl:ObjectProperty ;
+               rdfs:domain :Project ;
+               rdfs:range :Student ;
+               rdfs:comment "Links a project to its student participants" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#holdsRole
+:holdsRole rdf:type owl:ObjectProperty ;
+           rdfs:domain :Stakeholders ;
+           rdfs:range :ProjectRole ;
+           rdfs:comment "Indicates which formal function a stakeholder performs" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#precedes
+:precedes rdf:type owl:ObjectProperty ;
+          rdfs:subPropertyOf <http://www.w3.org/2006/time#intervalBefore> ;
+          rdf:type owl:TransitiveProperty ;
+          rdfs:domain :Phases ;
+          rdfs:range :Phases ;
+          rdfs:comment "Temporal ordering of project phases" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#producedBy
+:producedBy rdf:type owl:ObjectProperty ;
+            rdfs:domain :Deliverables ;
+            rdfs:range :Student .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/capstone-ontology#hasAbstract
+:hasAbstract rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Report ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasApprovalStatus
+:hasApprovalStatus rdf:type owl:DatatypeProperty ;
+                   rdfs:domain :Deliverables .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasDeadline
+:hasDeadline rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Phases ;
+             rdfs:range xsd:dateTime ;
+             rdfs:comment "When the phase must be completed" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasDepartment
+:hasDepartment rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Project ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasDueDate
+:hasDueDate rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Phases ;
+            rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasDuration
+:hasDuration rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Phases ;
+             rdfs:range xsd:duration ;
+             rdfs:comment "The length of time a phase takes (e.g., P30D for 30 days)\"" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasEndDate
+:hasEndDate rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Phases ;
+            rdfs:range xsd:dateTime ;
+            rdfs:comment "When the phase actually ended" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasFeedback
+:hasFeedback rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Evaluation ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasGrade
+:hasGrade rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Evaluation ;
+          rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasName
+:hasName rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Faculty ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasPresentationDate
+:hasPresentationDate rdf:type owl:DatatypeProperty ;
+                     rdfs:domain :Presentation ;
+                     rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasScore
+:hasScore rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Evaluation ;
+          rdfs:range xsd:integer ;
+          rdfs:comment "Numerical evaluation result (0-100 scale)" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasSlideCount
+:hasSlideCount rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Presentation ;
+               rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasStartDate
+:hasStartDate rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Phases ;
+              rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasStudentId
+:hasStudentId rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Student ;
+              rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasSubmissionDate
+:hasSubmissionDate rdf:type owl:DatatypeProperty ;
+                   rdfs:domain :Deliverables ;
+                   rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/capstone-ontology#hasTitle
+:hasTitle rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Project ;
+          rdfs:range xsd:string .
+
+
+###  http://www.w3.org/2002/07/owl#topDataProperty
+owl:topDataProperty rdfs:domain :Evaluation .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/capstone-ontology#Advisor
+:Advisor rdf:type owl:Class ;
+         rdfs:subClassOf :ProjectRole ;
+         rdfs:comment "Provides administrative guidance and ensures academic standards." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#CapstoneProject
+:CapstoneProject rdf:type owl:Class ;
+                 rdfs:subClassOf :Project ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasDeliverable ;
+                                   owl:someValuesFrom :Report
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasPhase ;
+                                   owl:minQualifiedCardinality "4"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :Phases
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasTeamMember ;
+                                   owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :Student
+                                 ] ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasTeamMember ;
+                                   owl:maxQualifiedCardinality "3"^^xsd:nonNegativeInteger ;
+                                   owl:onClass :Student
+                                 ] ;
+                 rdfs:comment "A culminating academic project demonstrating comprehensive learning in a discipline." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Deliverables
+:Deliverables rdf:type owl:Class ;
+              rdfs:subClassOf <http://www.w3.org/ns/prov#Entity> ;
+              rdfs:comment "Tangible artifact produced during the project." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Design
+:Design rdf:type owl:Class ;
+        rdfs:subClassOf :Phases ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :precedes ;
+                          owl:someValuesFrom :Development
+                        ] ;
+        owl:disjointWith :Development ,
+                         :Evaluation ,
+                         :Proposal ;
+        rdfs:comment "Period focused on system architecture and planning." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Developer
+:Developer rdf:type owl:Class ;
+           rdfs:subClassOf :ProjectRole .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Development
+:Development rdf:type owl:Class ;
+             rdfs:subClassOf :Phases ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :precedes ;
+                               owl:someValuesFrom :Evaluation
+                             ] ;
+             rdfs:comment "Implementation stage where solutions are built"@en .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Evaluation
+:Evaluation rdf:type owl:Class ;
+            rdfs:subClassOf :Phases ;
+            rdfs:comment "Final assessment of project outcomes and performance." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#ExternalEvaluator
+:ExternalEvaluator rdf:type owl:Class ;
+                   rdfs:subClassOf :Stakeholders ;
+                   rdfs:comment "Industry professional or external examiner assessing project outcomes" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Faculty
+:Faculty rdf:type owl:Class ;
+         rdfs:subClassOf :Stakeholders ;
+         owl:disjointWith :Student ;
+         rdfs:comment "Academic staff member involved in project supervision or evaluation" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Phases
+:Phases rdf:type owl:Class ;
+        rdfs:subClassOf <http://www.w3.org/2006/time#TemporalEntity> ;
+        rdfs:comment "Temporal segment of project with specific objectives." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Presentation
+:Presentation rdf:type owl:Class ;
+              rdfs:subClassOf :Deliverables ;
+              rdfs:comment "Oral defense demonstrating project outcomes." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Project
+:Project rdf:type owl:Class ;
+         <http://purl.org/dc/elements/1.1/description> "A research or development initiative with defined objectives and timeline" ;
+         rdfs:comment "A research or development initiative with defined objectives and timeline" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#ProjectRole
+:ProjectRole rdf:type owl:Class ;
+             rdfs:subClassOf <http://www.w3.org/ns/prov#Role> ;
+             rdfs:comment "Formal function assigned to a stakeholder in project execution." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Proposal
+:Proposal rdf:type owl:Class ;
+          rdfs:subClassOf :Phases ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :precedes ;
+                            owl:someValuesFrom :Design
+                          ] ;
+          rdfs:comment "Initial stage involving project definition and approval." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Report
+:Report rdf:type owl:Class ;
+        rdfs:subClassOf :Deliverables ;
+        rdfs:comment "Formal document describing project process and results" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Researcher
+:Researcher rdf:type owl:Class ;
+            rdfs:subClassOf :ProjectRole .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Stakeholders
+:Stakeholders rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty <http://xmlns.com/foaf/0.1/mbox_sha1sum> ;
+                                    owl:someValuesFrom xsd:anyURI
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty <http://xmlns.com/foaf/0.1/name> ;
+                                    owl:someValuesFrom xsd:string
+                                  ] ;
+              rdfs:subClassOf <http://schema.org/Person> ;
+              rdfs:comment "Any individual or group with interest in the project outcomes" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Student
+:Student rdf:type owl:Class ;
+         rdfs:subClassOf :Stakeholders ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty <http://xmlns.com/foaf/0.1/name> ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange xsd:string
+                         ] ;
+         rdfs:comment "An individual enrolled in the academic program completing the capstone." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Supervisor
+:Supervisor rdf:type owl:Class ;
+            rdfs:subClassOf :ProjectRole ;
+            rdfs:comment "Offers technical direction and subject matter expertise." .
+
+
+###  http://www.semanticweb.org/capstone-ontology#TeamLeader
+:TeamLeader rdf:type owl:Class ;
+            rdfs:subClassOf :ProjectRole .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/capstone-ontology#CS_Project_2024
+:CS_Project_2024 rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/capstone-ontology#DrJohnson
+:DrJohnson rdf:type owl:NamedIndividual ,
+                    :Faculty ;
+           <http://xmlns.com/foaf/0.1/mbox_sha1sum> "a.johnson@univ.edu" ;
+           <http://xmlns.com/foaf/0.1/name> "Dr. Alice Johnson" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#ProposalPhase
+:ProposalPhase rdf:type owl:NamedIndividual ,
+                        :Proposal ;
+               :hasEndDate "2024-09-15T00:00:00Z" ;
+               :hasStartDate "2024-09-01T00:00:00Z" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Student1
+:Student1 rdf:type owl:NamedIndividual ,
+                   :Student ;
+          :hasStudentId "CS2023001" ;
+          <http://xmlns.com/foaf/0.1/mbox_sha1sum> "e.wilson@student.edu" ;
+          <http://xmlns.com/foaf/0.1/name> "Bob" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#Student2
+:Student2 rdf:type owl:NamedIndividual ,
+                   :Student ;
+          :hasStudentId "CS2023002" ;
+          <http://xmlns.com/foaf/0.1/mbox_sha1sum> "e.ali@student.edu\"" ;
+          <http://xmlns.com/foaf/0.1/name> "Ali" .
+
+
+###  http://www.semanticweb.org/capstone-ontology#advisor_role_1
+:advisor_role_1 rdf:type owl:NamedIndividual ,
+                         :Advisor .
+
+
+###  http://www.semanticweb.org/capstone-ontology#supervisor_role_1
+:supervisor_role_1 rdf:type owl:NamedIndividual ,
+                            :Supervisor .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
